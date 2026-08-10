@@ -1,0 +1,1 @@
+- [Expo tutor dock](expo-tutor-dock.md) — on web, keep chat prompts and the composer in an explicitly sized bottom dock so horizontal content cannot expand vertically.
