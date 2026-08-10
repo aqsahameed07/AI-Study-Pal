@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/"
+title = "AI Study Companion"
+description = "A mobile-first study companion for students to chat with an AI tutor, build study plans, create flashcards and quizzes, upload notes, and track learning progress with an encouraging daily dashboard."
+version = "1.0.0"
+id = "artifacts/ai-study-companion"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/" ]
+localPort = 19777
+
+[services.development]
+run = "pnpm --filter @workspace/ai-study-companion run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ai-study-companion", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/ai-study-companion", "run", "serve" ]
+
+[services.env]
+PORT = "19777"
+BASE_PATH = "/"

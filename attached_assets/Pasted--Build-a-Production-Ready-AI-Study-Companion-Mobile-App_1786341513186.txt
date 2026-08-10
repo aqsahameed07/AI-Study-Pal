@@ -1,0 +1,466 @@
+# Build a Production-Ready AI Study Companion Mobile App
+
+You are a senior React Native, TypeScript, Node.js, MongoDB, and AI engineer.
+
+Create a complete full-stack mobile application called "AI Study Companion".
+
+The application must be production-ready, scalable, mobile-first, and follow clean architecture principles.
+
+---
+
+# Tech Stack
+
+## Mobile Frontend
+
+* React Native
+* Expo
+* TypeScript
+* React Navigation
+* TanStack Query
+* React Hook Form
+* Zod Validation
+* Zustand for local state management
+* Axios
+* NativeWind (Tailwind for React Native)
+
+## Backend
+
+* Node.js
+* Express.js
+* TypeScript
+
+## Database
+
+* MongoDB
+* Mongoose
+
+## Authentication
+
+* JWT Authentication
+* bcrypt password hashing
+
+## AI
+
+* OpenAI API or Gemini API
+
+## File Storage
+
+* Cloudinary for PDF uploads
+
+---
+
+# Application Goal
+
+Students can:
+
+* Register and login
+* Chat with an AI tutor
+* Generate study plans
+* Upload study notes and PDFs
+* Generate flashcards
+* Generate quizzes
+* Track learning progress
+* View study analytics
+
+---
+
+# Folder Structure
+
+Create clean scalable folder structures for both frontend and backend.
+
+Frontend:
+
+src/
+├── screens/
+├── navigation/
+├── services/
+├── hooks/
+├── store/
+├── components/
+├── features/
+├── utils/
+├── types/
+├── constants/
+├── assets/
+
+Backend:
+
+src/
+├── config/
+├── controllers/
+├── services/
+├── routes/
+├── middleware/
+├── models/
+├── utils/
+├── types/
+├── validators/
+├── ai/
+├── uploads/
+
+---
+
+# Authentication Module
+
+Create:
+
+## Register
+
+Fields:
+
+* Full Name
+* Email
+* Password
+
+Requirements:
+
+* Validate inputs
+* Hash password using bcrypt
+* Store user in MongoDB
+* Return JWT token
+
+## Login
+
+Fields:
+
+* Email
+* Password
+
+Requirements:
+
+* Verify credentials
+* Generate JWT
+* Store token securely
+
+## Protected Routes
+
+Implement JWT middleware.
+
+Users must be authenticated to access:
+
+* Chat
+* Study Plans
+* Flashcards
+* Quizzes
+* Dashboard
+
+---
+
+# User Model
+
+Create MongoDB schema:
+
+User
+
+Fields:
+
+* id
+* fullName
+* email
+* password
+* avatar
+* studyStreak
+* totalStudyHours
+* totalQuizzesCompleted
+* createdAt
+* updatedAt
+
+---
+
+# Dashboard
+
+Create dashboard screen.
+
+Display:
+
+* Study streak
+* Study hours
+* Quizzes completed
+* Flashcards created
+* AI chats completed
+
+Use beautiful cards.
+
+Display recent activity.
+
+---
+
+# AI Tutor Module
+
+Create ChatGPT-style interface.
+
+Features:
+
+* User sends message
+* AI responds
+* Chat history saved in MongoDB
+* Infinite scrolling messages
+* Typing animation
+* Loading states
+
+Database Collection:
+
+Chat
+
+Fields:
+
+* id
+* userId
+* messages
+* createdAt
+
+Message Structure:
+
+* role
+* content
+* timestamp
+
+---
+
+# Study Plan Generator
+
+Screen:
+
+Generate Study Plan
+
+Inputs:
+
+* Subject
+* Exam Date
+* Study Hours Per Day
+
+Send prompt to AI.
+
+Generate:
+
+* Daily schedule
+* Topics to study
+* Revision sessions
+
+Save plans to database.
+
+StudyPlan Collection:
+
+* id
+* userId
+* subject
+* examDate
+* studyHours
+* generatedPlan
+
+---
+
+# Flashcard Generator
+
+User enters notes.
+
+AI generates:
+
+Question
+Answer
+
+Store in MongoDB.
+
+Flashcard Collection:
+
+* id
+* userId
+* question
+* answer
+* subject
+
+Create swipeable flashcard UI.
+
+---
+
+# PDF Upload System
+
+Allow uploading PDF notes.
+
+Requirements:
+
+* Upload PDF
+* Save file to Cloudinary
+* Store file URL
+
+Database:
+
+Document
+
+Fields:
+
+* id
+* userId
+* title
+* fileUrl
+* uploadedAt
+
+---
+
+# AI Quiz Generator
+
+After PDF upload:
+
+User clicks:
+
+Generate Quiz
+
+AI creates:
+
+* Multiple Choice Questions
+* True/False Questions
+* Short Answer Questions
+
+Quiz Collection:
+
+* id
+* userId
+* questions
+* score
+* completedAt
+
+Question Schema:
+
+* question
+* options
+* correctAnswer
+* explanation
+
+---
+
+# Quiz Interface
+
+Create beautiful mobile quiz experience.
+
+Features:
+
+* One question at a time
+* Progress indicator
+* Timer
+* Score calculation
+* Results page
+
+Display:
+
+* Correct answers
+* Wrong answers
+* Explanations
+
+---
+
+# Progress Tracking
+
+Track:
+
+* Daily study hours
+* Quiz scores
+* Flashcards completed
+* Study streaks
+
+Generate analytics.
+
+---
+
+# Analytics Screen
+
+Display charts:
+
+* Weekly study hours
+* Monthly study hours
+* Quiz performance
+* Learning progress
+
+Create professional dashboard.
+
+---
+
+# Push Notifications
+
+Implement notifications for:
+
+* Study reminders
+* Exam reminders
+* Daily streak reminders
+
+---
+
+# Settings
+
+Create settings screen.
+
+Features:
+
+* Change password
+* Edit profile
+* Upload avatar
+* Dark mode
+* Logout
+
+---
+
+# Error Handling
+
+Implement:
+
+* Global error handling
+* API error handling
+* Validation messages
+* Offline states
+* Loading states
+
+---
+
+# Security
+
+Implement:
+
+* Password hashing
+* JWT expiration
+* Request validation
+* Rate limiting
+* Environment variables
+
+---
+
+# API Documentation
+
+Create complete API documentation.
+
+Include:
+
+* Endpoints
+* Request examples
+* Response examples
+
+---
+
+# README
+
+Generate professional README containing:
+
+* Features
+* Architecture
+* Tech stack
+* Installation
+* Screenshots section
+* API documentation
+* Deployment instructions
+
+---
+
+# Bonus Features
+
+If time permits, implement:
+
+1. Voice-to-text study chat
+2. AI-generated flashcards from PDFs
+3. AI-generated study summaries
+4. AI-generated exam preparation plans
+5. Gamification system
+6. XP points
+7. Achievement badges
+8. Leaderboard
+9. Multi-language support
+10. Subscription system using Stripe
+
+Build the entire application step-by-step with clean, reusable, production-quality code. Use TypeScript everywhere. Follow best practices, SOLID principles, and scalable architecture.
