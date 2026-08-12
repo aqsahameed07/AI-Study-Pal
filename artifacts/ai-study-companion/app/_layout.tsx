@@ -12,8 +12,11 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import { Stack } from 'expo-router';
+import { Redirect, useSegments, type Href, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StudyProvider } from '@/context/StudyContext';
+import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/expo';
+import { tokenCache } from '@clerk/expo/token-cache';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,8 +24,26 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function RootLayoutNav() {
+  const { isLoaded, isSignedIn } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+  const inAuthGroup = (segments[0] as string | undefined) === '(auth)';
+  const shouldEnterAuth = isLoaded && !isSignedIn && !inAuthGroup;
+  const shouldLeaveAuth = isLoaded && !!isSignedIn && inAuthGroup;
+
+  useEffect(() => {
+    if (shouldEnterAuth) {
+      router.replace('/sign-in' as Href);
+    } else if (shouldLeaveAuth) {
+      router.replace('/');
+    }
+  }, [router, shouldEnterAuth, shouldLeaveAuth]);
+
+  if (!isLoaded || shouldEnterAuth || shouldLeaveAuth) return null;
+
   return (
       <Stack screenOptions={{ headerBackTitle: 'Back', headerShown: false, contentStyle: { backgroundColor: '#0B1730' } }}>
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="study-plan" />
       <Stack.Screen name="flashcards" />
@@ -50,15 +71,23 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <StudyProvider>
-          <GestureHandlerRootView>
-            <KeyboardProvider>
-              <RootLayoutNav />
-            </KeyboardProvider>
-          </GestureHandlerRootView>
-          </StudyProvider>
-        </QueryClientProvider>
+        <ClerkProvider
+          publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? ''}
+          tokenCache={tokenCache}
+          proxyUrl={process.env.EXPO_PUBLIC_CLERK_PROXY_URL || undefined}
+        >
+          <ClerkLoaded>
+            <QueryClientProvider client={queryClient}>
+              <StudyProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <KeyboardProvider>
+                    <RootLayoutNav />
+                  </KeyboardProvider>
+                </GestureHandlerRootView>
+              </StudyProvider>
+            </QueryClientProvider>
+          </ClerkLoaded>
+        </ClerkProvider>
       </ErrorBoundary>
     </SafeAreaProvider>
   );
