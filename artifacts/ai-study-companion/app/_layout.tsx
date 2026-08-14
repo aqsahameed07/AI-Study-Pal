@@ -24,12 +24,38 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function RootLayoutNav() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const router = useRouter();
   const segments = useSegments();
   const inAuthGroup = (segments[0] as string | undefined) === '(auth)';
   const shouldEnterAuth = isLoaded && !isSignedIn && !inAuthGroup;
   const shouldLeaveAuth = isLoaded && !!isSignedIn && inAuthGroup;
+
+  // Sync user with backend when signed in
+  useEffect(() => {
+    const syncUser = async () => {
+      if (isSignedIn && isLoaded) {
+        try {
+          const token = await getToken();
+          if (token) {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/sync-user`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (response.ok) {
+              console.log('✅ User synced with backend');
+            }
+          }
+        } catch (error) {
+          console.error('❌ Failed to sync user:', error);
+        }
+      }
+    };
+    syncUser();
+  }, [isSignedIn, isLoaded, getToken]);
 
   useEffect(() => {
     if (shouldEnterAuth) {
@@ -42,7 +68,7 @@ function RootLayoutNav() {
   if (!isLoaded || shouldEnterAuth || shouldLeaveAuth) return null;
 
   return (
-      <Stack screenOptions={{ headerBackTitle: 'Back', headerShown: false, contentStyle: { backgroundColor: '#0B1730' } }}>
+    <Stack screenOptions={{ headerBackTitle: 'Back', headerShown: false, contentStyle: { backgroundColor: '#0B1730' } }}>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="study-plan" />

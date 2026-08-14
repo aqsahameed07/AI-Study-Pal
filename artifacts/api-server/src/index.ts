@@ -1,25 +1,24 @@
-import app from "./app";
-import { logger } from "./lib/logger";
+import dotenv from 'dotenv';
+dotenv.config();
 
-const rawPort = process.env["PORT"];
+import app from './app.js';
 
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
-}
+const PORT = process.env.PORT || 5000;
 
-const port = Number(rawPort);
+app.listen(PORT, () => {
+  console.log(`🚀 Study Pal API running on port ${PORT}`);
+  console.log(`📚 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 API URL: http://localhost:${PORT}/api/health`);
+});
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
 
-app.listen(port, (err) => {
-  if (err) {
-    logger.error({ err }, "Error listening on port");
-    process.exit(1);
-  }
-
-  logger.info({ port }, "Server listening");
+// Handle unhandled rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
