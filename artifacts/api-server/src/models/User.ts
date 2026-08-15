@@ -6,6 +6,7 @@ export interface IUser extends Document {
   firstName?: string;
   lastName?: string;
   fullName?: string;
+  phoneNumber?: string;
   profileImage?: string;
   settings: {
     darkMode: boolean;
@@ -49,6 +50,10 @@ const UserSchema = new Schema<IUser>(
       type: String,
       trim: true,
     },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
     profileImage: String,
     settings: {
       darkMode: { type: Boolean, default: false },
@@ -68,7 +73,7 @@ const UserSchema = new Schema<IUser>(
 );
 
 // Update fullName before saving
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function (next: (err?: Error) => void) {
   if (this.firstName || this.lastName) {
     this.fullName = `${this.firstName || ''} ${this.lastName || ''}`.trim();
   }

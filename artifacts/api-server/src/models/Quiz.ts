@@ -120,7 +120,7 @@ const QuizSchema = new Schema<IQuiz>(
 );
 
 // Update stats before saving
-QuizSchema.pre('save', function(next) {
+QuizSchema.pre('save', function(next: (err?: Error) => void) {
   this.stats.totalQuestions = this.questions.length;
   this.stats.correctAnswers = this.questions.filter(q => q.isCorrect).length;
   this.stats.incorrectAnswers = this.questions.filter(

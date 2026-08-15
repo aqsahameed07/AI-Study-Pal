@@ -10,8 +10,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.APP_URL || '*',
+  origin: true,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(express.json({ limit: '10mb' }));
@@ -47,8 +49,7 @@ app.use((req, res) => {
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Error:', err.stack);
-  
-  // Mongoose validation errors
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
@@ -56,8 +57,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
       errors: Object.values(err.errors).map((e: any) => e.message),
     });
   }
-  
-  // Mongoose duplicate key error
+
   if (err.code === 11000) {
     return res.status(409).json({
       success: false,
@@ -65,8 +65,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
       field: Object.keys(err.keyPattern)[0],
     });
   }
-  
-  res.status(err.status || 500).json({
+
+  return res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
   });

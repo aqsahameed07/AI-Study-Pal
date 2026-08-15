@@ -1,8 +1,8 @@
-import Constants from 'expo-constants';
 import { useAuth } from '@clerk/expo';
+import { getApiBaseUrl } from '@/lib/api-url';
 
-// Get API URL from environment
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+// Get API URL from environment or inferred LAN address
+const API_URL = getApiBaseUrl();
 
 // API Client class
 export class ApiClient {
@@ -22,13 +22,11 @@ export class ApiClient {
   ): Promise<T> {
     const url = `${API_URL}${endpoint}`;
     
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
+    const headers = new Headers(options.headers ?? {});
+    headers.set('Content-Type', 'application/json');
 
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+      headers.set('Authorization', `Bearer ${this.token}`);
     }
 
     const response = await fetch(url, {

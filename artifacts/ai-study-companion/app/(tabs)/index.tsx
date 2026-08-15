@@ -16,11 +16,11 @@ export default function HomeScreen() {
         const api = await getApiClient();
         
         // Get current user
-        const userData = await api.getCurrentUser();
+        const userData = (await api.getCurrentUser()) as any;
         setUser(userData.data);
 
         // Get study plans
-        const plansData = await api.getStudyPlans();
+        const plansData = (await api.getStudyPlans()) as any;
         setStudyPlans(plansData.data);
       } catch (error) {
         console.error('Error fetching data:', error);

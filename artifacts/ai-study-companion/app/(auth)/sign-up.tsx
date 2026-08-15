@@ -1,14 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { useAuth, useSignUp } from '@clerk/expo';
+import { useAuth, useClerk, useSignUp } from '@clerk/expo';
 import { type Href, useRouter } from 'expo-router';
 import { AuthButton, AuthError, AuthInput, AuthShell, authStyles } from '@/components/AuthUI';
 import { useColors } from '@/hooks/useColors';
+import { getApiBaseUrl } from '@/lib/api-url';
 
 export default function SignUpScreen() {
   const colors = useColors();
   const router = useRouter();
-  const { isSignedIn, getToken, setActive } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
+  const { setActive } = useClerk();
   const { signUp, errors, fetchStatus } = useSignUp();
 
   const [fullName, setFullName] = useState('');
@@ -37,7 +39,7 @@ export default function SignUpScreen() {
         return;
       }
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiBaseUrl();
       console.log('🔄 Syncing user to:', `${apiUrl}/auth/sync-user`);
 
       const response = await fetch(`${apiUrl}/auth/sync-user`, {

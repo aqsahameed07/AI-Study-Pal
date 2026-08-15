@@ -85,7 +85,8 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
 // Review a card
 router.put('/:deckId/review/:cardIndex', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const { deckId, cardIndex } = req.params;
+    const { deckId } = req.params;
+    const rawCardIndex = Array.isArray(req.params.cardIndex) ? req.params.cardIndex[0] : req.params.cardIndex;
     const { correct } = req.body;
     
     const deck = await Flashcard.findOne({
@@ -100,8 +101,8 @@ router.put('/:deckId/review/:cardIndex', authMiddleware, async (req: AuthRequest
       });
     }
     
-    const index = parseInt(cardIndex);
-    if (index < 0 || index >= deck.cards.length) {
+    const index = Number.parseInt(rawCardIndex ?? '', 10);
+    if (!Number.isFinite(index) || index < 0 || index >= deck.cards.length) {
       return res.status(404).json({
         success: false,
         message: 'Card not found',

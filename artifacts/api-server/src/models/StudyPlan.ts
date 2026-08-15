@@ -124,7 +124,7 @@ const StudyPlanSchema = new Schema<IStudyPlan>(
 );
 
 // Update progress before saving
-StudyPlanSchema.pre('save', function(next) {
+StudyPlanSchema.pre('save', function(next: (err?: Error) => void) {
   const totalTasks = this.tasks.length;
   if (totalTasks > 0) {
     const completedTasks = this.tasks.filter(t => t.status === 'completed').length;

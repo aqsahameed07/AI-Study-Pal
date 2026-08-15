@@ -91,7 +91,7 @@ const FlashcardSchema = new Schema<IFlashcard>(
 );
 
 // Update stats before saving
-FlashcardSchema.pre('save', function(next) {
+FlashcardSchema.pre('save', function(next: (err?: Error) => void) {
   this.stats.totalCards = this.cards.length;
   this.stats.masteredCards = this.cards.filter(
     c => c.reviewCount >= 5 && c.correctCount > c.incorrectCount

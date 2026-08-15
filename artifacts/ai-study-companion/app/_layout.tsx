@@ -17,6 +17,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StudyProvider } from '@/context/StudyContext';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';
+import { getApiBaseUrl } from '@/lib/api-url';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,7 +39,8 @@ function RootLayoutNav() {
         try {
           const token = await getToken();
           if (token) {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/sync-user`, {
+            const apiUrl = getApiBaseUrl();
+          const response = await fetch(`${apiUrl}/auth/sync-user`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${token}`,

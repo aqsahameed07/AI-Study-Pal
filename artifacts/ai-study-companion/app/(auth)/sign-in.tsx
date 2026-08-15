@@ -2,17 +2,19 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, Text, View } from 'react-native';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
-import { useAuth, useSignIn, useSSO } from '@clerk/expo';
+import { useAuth, useClerk, useSignIn, useSSO } from '@clerk/expo';
 import { Link, type Href, useRouter } from 'expo-router';
 import { AuthButton, AuthError, AuthInput, AuthShell, authStyles } from '@/components/AuthUI';
 import { useColors } from '@/hooks/useColors';
+import { getApiBaseUrl } from '@/lib/api-url';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function SignInScreen() {
   const colors = useColors();
   const router = useRouter();
-  const { isSignedIn, setActive, getToken } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
+  const { setActive } = useClerk();
   const { signIn, errors, fetchStatus } = useSignIn();
   const { startSSOFlow } = useSSO();
 
@@ -41,7 +43,7 @@ export default function SignInScreen() {
         return;
       }
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiBaseUrl();
       const response = await fetch(`${apiUrl}/auth/sync-user`, {
         method: 'POST',
         headers: {
