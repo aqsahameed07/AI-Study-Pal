@@ -68,7 +68,7 @@ const UserSchema = new Schema<IUser>(
 );
 
 // Update fullName before saving
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
   if (this.firstName || this.lastName) {
     this.fullName = `${this.firstName || ''} ${this.lastName || ''}`.trim();
   }
